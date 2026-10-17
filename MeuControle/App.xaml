@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conversores="clr-namespace:MeuControle.Converters"
+             x:Class="MeuControle.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <conversores:InversorBooleanoConverter x:Key="InversorBooleano" />
+            <Color x:Key="Fundo">#0B1225</Color>
+            <Color x:Key="Cartao">#17223A</Color>
+            <Color x:Key="Texto">#F5F7FF</Color>
+            <Color x:Key="Secundario">#A9B6D2</Color>
+            <Color x:Key="Destaque">#8267FF</Color>
+            <Color x:Key="Receita">#35D9AD</Color>
+            <Color x:Key="Despesa">#FF7B92</Color>
+            <Style TargetType="Label"><Setter Property="TextColor" Value="{StaticResource Texto}" /></Style>
+            <Style TargetType="Entry"><Setter Property="TextColor" Value="{StaticResource Texto}" /><Setter Property="PlaceholderColor" Value="{StaticResource Secundario}" /></Style>
+            <Style TargetType="Picker"><Setter Property="TextColor" Value="{StaticResource Texto}" /><Setter Property="TitleColor" Value="{StaticResource Secundario}" /></Style>
+            <Style TargetType="DatePicker"><Setter Property="TextColor" Value="{StaticResource Texto}" /></Style>
+            <Style TargetType="Button"><Setter Property="CornerRadius" Value="12" /><Setter Property="TextColor" Value="White" /></Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

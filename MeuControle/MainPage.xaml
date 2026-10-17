@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MeuControle.ViewModels"
+             xmlns:model="clr-namespace:MeuControle.Models"
+             x:Class="MeuControle.MainPage"
+             x:Name="PaginaRaiz"
+             x:DataType="vm:PaginaInicialViewModel"
+             BackgroundColor="{StaticResource Fundo}"
+             Title="MeuControle">
+    <ScrollView>
+        <VerticalStackLayout Padding="22,26" Spacing="18" MaximumWidthRequest="900">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="3">
+                    <Label Text="MEUCONTROLE" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Receita}" CharacterSpacing="2" />
+                    <Label Text="Minhas finanças" FontSize="29" FontAttributes="Bold" />
+                    <Label Text="Organize seu dinheiro com simplicidade" FontSize="13" TextColor="{StaticResource Secundario}" />
+                </VerticalStackLayout>
+                <Border Grid.Column="1" BackgroundColor="{StaticResource Cartao}" StrokeThickness="0" StrokeShape="RoundRectangle 15" Padding="12" VerticalOptions="Start">
+                    <Label Text="R$" FontSize="19" FontAttributes="Bold" TextColor="{StaticResource Receita}" />
+                </Border>
+            </Grid>
+            <Border BackgroundColor="{StaticResource Destaque}" StrokeThickness="0" StrokeShape="RoundRectangle 22" Padding="22">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="SALDO TOTAL" FontSize="12" TextColor="White" CharacterSpacing="1.5" />
+                    <Label Text="{Binding SaldoFormatado}" FontSize="36" FontAttributes="Bold" TextColor="White" />
+                    <Label Text="Visão geral de todos os lançamentos" FontSize="12" TextColor="#E7E1FF" />
+                </VerticalStackLayout>
+            </Border>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border BackgroundColor="{StaticResource Cartao}" StrokeThickness="0" StrokeShape="RoundRectangle 17" Padding="16">
+                    <VerticalStackLayout Spacing="7">
+                        <Label Text="↗  Receitas" FontSize="13" TextColor="{StaticResource Receita}" />
+                        <Label Text="{Binding ReceitasFormatadas}" FontSize="21" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="{StaticResource Cartao}" StrokeThickness="0" StrokeShape="RoundRectangle 17" Padding="16">
+                    <VerticalStackLayout Spacing="7">
+                        <Label Text="↘  Despesas" FontSize="13" TextColor="{StaticResource Despesa}" />
+                        <Label Text="{Binding DespesasFormatadas}" FontSize="21" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+            <Border BackgroundColor="{StaticResource Cartao}" StrokeThickness="0" StrokeShape="RoundRectangle 20" Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{Binding TituloFormulario}" FontSize="21" FontAttributes="Bold" />
+                    <Label Text="DESCRIÇÃO" FontSize="11" TextColor="{StaticResource Secundario}" />
+                    <Entry Placeholder="Ex.: Compra no mercado" Text="{Binding Descricao}" MaxLength="100" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="VALOR (R$)" FontSize="11" TextColor="{StaticResource Secundario}" />
+                            <Entry Placeholder="0,00" Keyboard="Numeric" Text="{Binding ValorTexto}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="5">
+                            <Label Text="TIPO" FontSize="11" TextColor="{StaticResource Secundario}" />
+                            <Picker ItemsSource="{Binding Tipos}" SelectedItem="{Binding TipoSelecionado}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="CATEGORIA" FontSize="11" TextColor="{StaticResource Secundario}" />
+                            <Picker ItemsSource="{Binding Categorias}" SelectedItem="{Binding CategoriaSelecionada}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="5">
+                            <Label Text="DATA" FontSize="11" TextColor="{StaticResource Secundario}" />
+                            <DatePicker Date="{Binding DataSelecionada}" Format="dd/MM/yyyy" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Button Text="Salvar lançamento" BackgroundColor="{StaticResource Destaque}" HeightRequest="48" Command="{Binding SalvarCommand}" IsEnabled="{Binding Ocupado, Converter={StaticResource InversorBooleano}}" />
+                    <Button Text="Cancelar edição" BackgroundColor="#33415E" Command="{Binding CancelarEdicaoCommand}" IsVisible="{Binding Editando}" />
+                    <Label Text="{Binding Mensagem}" FontSize="12" TextColor="{StaticResource Receita}" LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Border>
+            <Grid ColumnDefinitions="*,150" ColumnSpacing="10">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Lançamentos" FontSize="22" FontAttributes="Bold" />
+                    <Label Text="{Binding QuantidadeFormatada}" FontSize="12" TextColor="{StaticResource Secundario}" />
+                </VerticalStackLayout>
+                <Picker Grid.Column="1" ItemsSource="{Binding Filtros}" SelectedItem="{Binding FiltroSelecionado}" Title="Filtrar" />
+            </Grid>
+            <CollectionView ItemsSource="{Binding Lancamentos}" SelectionMode="None" EmptyView="Nenhum lançamento encontrado. Adicione seu primeiro registro acima.">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Lancamento">
+                        <Border BackgroundColor="{StaticResource Cartao}" StrokeThickness="0" StrokeShape="RoundRectangle 15" Padding="14" Margin="0,0,0,9">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
+                                <Label Text="{Binding Descricao}" FontSize="16" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                <Label Grid.Column="1" Text="{Binding ValorFormatado}" TextColor="{Binding CorValor}" FontAttributes="Bold" FontSize="15" />
+                                <Label Grid.Row="1" Text="{Binding Categoria}" FontSize="12" TextColor="{StaticResource Secundario}" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding DataFormatada}" FontSize="12" TextColor="{StaticResource Secundario}" HorizontalTextAlignment="End" />
+                                <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="9" Margin="0,6,0,0">
+                                    <Button Text="Editar" FontSize="12" Padding="15,6" BackgroundColor="#33415E" Command="{Binding Source={x:Reference PaginaRaiz}, Path=BindingContext.EditarCommand}" CommandParameter="{Binding .}" />
+                                    <Button Text="Excluir" FontSize="12" Padding="15,6" BackgroundColor="#8D3449" Command="{Binding Source={x:Reference PaginaRaiz}, Path=BindingContext.ExcluirCommand}" CommandParameter="{Binding .}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label Text="MeuControle • Desenvolvido com .NET MAUI 10" HorizontalTextAlignment="Center" FontSize="11" TextColor="{StaticResource Secundario}" Margin="0,8,0,16" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
